@@ -1,15 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import CalendarHeader from '@/components/home/CalendarHeader'
-import CreatePost from '@/components/home/CreatePost'
 import RecentEntries from '@/components/home/RecentEntries'
-
+import AddEntryTile from '@/components/home/AddEntryTile'
 export default function Home() {
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Welcome toJournalsApp</Text>
-            <CalendarHeader />
-            <CreatePost />
+            <CalendarHeader userName='Praval' />
+            <AddEntryTile />
             <RecentEntries />
         </View>
     )
@@ -20,11 +18,8 @@ export default function Home() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    title: {
-        fontSize: 20,
-        fontWeight: 'bold',
+
+        backgroundColor: '#FFFFFF',
+        marginTop: 30,
     }
 })

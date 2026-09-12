@@ -12,20 +12,21 @@ export default function Welcome() {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.content}>
-                <View>
-                    <Image source={require('@/assets/images/frontImg.png')} style={styles.image} resizeMode="contain" />
-                    <Text style={styles.title}>
-                        Start keeping{'\n'}
-                        track of your{'\n'}
-                        <Text style={styles.capsuleText}> life </Text>
-                    </Text>
+                <View style={styles.topSection}>
+                    <Image source={require('../../assets/images/frontImg.png')} style={styles.image} resizeMode="contain" />
+                    <View style={styles.titleContainer}>
+                        <Text style={styles.title}>Start keeping{'\n'}track of your</Text>
+                        <View style={styles.capsuleContainer}>
+                            <Text style={styles.capsuleText}>life</Text>
+                        </View>
+                    </View>
                 </View>
                 <View style={styles.buttonWrapper}>
                     <TouchableOpacity style={styles.button} onPress={handleGetStarted}>
                         <Text style={styles.buttonText}>Join for free</Text>
                     </TouchableOpacity>
                 </View>
-                <Text>Already have an account? <Text style={styles.login}>Log in</Text></Text>
+                <Text style={styles.footerText}>Already have an account? <Text style={styles.login}>Log in</Text></Text>
             </View>
         </SafeAreaView>
     );
@@ -43,19 +44,34 @@ const styles = StyleSheet.create({
         paddingHorizontal: 24,
         paddingVertical: 20,
     },
+    topSection: {
+        alignItems: 'center',
+        width: '100%',
+    },
+    titleContainer: {
+        alignItems: 'center',
+        marginBottom: 20,
+    },
     title: {
         fontSize: 32,
         fontWeight: '800',
-        lineHeight: 46,
+        lineHeight: 44,
         color: '#000000',
         letterSpacing: -0.5,
         textAlign: 'center',
-        marginBottom: 24,
     },
-    capsuleText: {
+    capsuleContainer: {
         borderWidth: 1.5,
         borderColor: '#000000',
         borderRadius: 20,
+        paddingHorizontal: 16,
+        paddingVertical: 2,
+        marginTop: 6,
+    },
+    capsuleText: {
+        fontSize: 32,
+        fontWeight: '800',
+        color: '#000000',
     },
     buttonWrapper: {
         width: '100%',
@@ -74,14 +90,18 @@ const styles = StyleSheet.create({
         fontWeight: '600',
     },
     image: {
-        height: 300,
-        width: 380,
+        height: 280,
+        width: '100%',
         alignSelf: 'center',
-        marginBottom: 30,
+        marginBottom: 20,
+    },
+    footerText: {
+        fontSize: 14,
+        color: '#666666',
     },
     login: {
         color: '#000000',
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: '600',
         textDecorationLine: 'underline',
     }

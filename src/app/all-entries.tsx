@@ -1,5 +1,5 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Plus } from "lucide-react-native";
+import { StyleSheet, Text, View, FlatList, TouchableOpacity } from "react-native";
+import { ChevronLeft } from "lucide-react-native";
 import { useRouter } from "expo-router";
 
 interface Entry {
@@ -7,10 +7,13 @@ interface Entry {
     date: Date;
 }
 
-const entries: Entry[] = [
+const allEntries: Entry[] = [
     { title: "Soccer game", date: new Date(2022, 1, 8, 20, 15) },
     { title: "Planning vacation!", date: new Date(2022, 1, 8, 20, 15) },
     { title: "Visiting family", date: new Date(2022, 1, 8, 20, 15) },
+    { title: "First day at work", date: new Date(2022, 1, 9, 12, 14) },
+    { title: "Grocery shopping", date: new Date(2022, 1, 10, 9, 30) },
+    { title: "Movie night", date: new Date(2022, 1, 11, 21, 0) },
 ];
 
 function formatEntryDate(date: Date): string {
@@ -27,69 +30,65 @@ function formatEntryDate(date: Date): string {
     return `${time} · ${day}`;
 }
 
-export default function RecentEntries() {
+export default function AllEntriesScreen() {
     const router = useRouter();
 
     return (
         <View style={styles.container}>
-            <View style={styles.headerRow}>
-                <Text style={styles.recentEntriesTitle}>Recent Entries</Text>
-                <TouchableOpacity onPress={() => router.push('/all-entries')}>
-                    <Text style={styles.viewAllText}>View all</Text>
+            {/* Header */}
+            <View style={styles.header}>
+                <TouchableOpacity onPress={() => router.back()}>
+                    <ChevronLeft size={24} color="#000" />
                 </TouchableOpacity>
+                <Text style={styles.headerTitle}>All Entries</Text>
+                <View style={{ width: 24 }} />
             </View>
 
-            <View style={styles.listCard}>
-                {entries.slice(0, 3).map((entry, index) => (
+            {/* Scrollable list */}
+            <FlatList
+                data={allEntries}
+                keyExtractor={(item, index) => item.title + index}
+                contentContainerStyle={styles.listContent}
+                renderItem={({ item, index }) => (
                     <View
-                        key={entry.title}
                         style={[
                             styles.entry,
-                            index !== Math.min(entries.length, 3) - 1 && styles.entryDivider,
+                            index !== allEntries.length - 1 && styles.entryDivider,
                         ]}
                     >
                         <View style={styles.entryBar} />
                         <View style={styles.entryTextContainer}>
-                            <Text style={styles.entryTitle}>{entry.title}</Text>
-                            <Text style={styles.entryDate}>{formatEntryDate(entry.date)}</Text>
+                            <Text style={styles.entryTitle}>{item.title}</Text>
+                            <Text style={styles.entryDate}>{formatEntryDate(item.date)}</Text>
                         </View>
                     </View>
-                ))}
-            </View>
-
-            <TouchableOpacity style={styles.fab} activeOpacity={0.8} onPress={() => router.push('/create-post')}>
-                <Plus size={26} color="#FFFFFF" />
-            </TouchableOpacity>
+                )}
+            />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        marginHorizontal: 10,
-        marginTop: 10
-
+        flex: 1,
+        backgroundColor: '#FFFFFF',
+        paddingHorizontal: 20,
+        paddingTop: 16,
     },
-    headerRow: {
+    header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        // alignItems: 'center',
-        marginBottom: 14,
-        marginHorizontal: 10
+        alignItems: 'center',
+        marginBottom: 20,
+        marginTop: 20
     },
-    recentEntriesTitle: {
+    headerTitle: {
         fontSize: 18,
         fontWeight: '700',
-        color: '#000000',
+        color: '#000',
     },
-    viewAllText: {
-        fontSize: 13,
-        color: '#B0B0B5',
-    },
-    listCard: {
-        backgroundColor: '#FFFFFF',
-        borderRadius: 20,
-        paddingHorizontal: 16,
+    listContent: {
+        paddingBottom: 40,
     },
     entry: {
         flexDirection: 'row',
@@ -119,21 +118,5 @@ const styles = StyleSheet.create({
     entryDate: {
         fontSize: 12,
         color: '#B0B0B5',
-    },
-    fab: {
-        position: 'absolute',
-        bottom: 10,
-        right: 20,
-        width: 56,
-        height: 56,
-        borderRadius: 28,
-        backgroundColor: '#000000',
-        alignItems: 'center',
-        justifyContent: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.2,
-        shadowRadius: 6,
-        elevation: 5,
     },
 });
