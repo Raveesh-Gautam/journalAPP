@@ -1,17 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Plus } from "lucide-react-native";
 import { useRouter } from "expo-router";
-
-interface Entry {
-    title: string;
-    date: Date;
-}
-
-const entries: Entry[] = [
-    { title: "Soccer game", date: new Date(2022, 1, 8, 20, 15) },
-    { title: "Planning vacation!", date: new Date(2022, 1, 8, 20, 15) },
-    { title: "Visiting family", date: new Date(2022, 1, 8, 20, 15) },
-];
+import { useEntries } from "@/context/EntriesContext";
 
 function formatEntryDate(date: Date): string {
     const time = date.toLocaleTimeString('en-US', {
@@ -29,6 +19,9 @@ function formatEntryDate(date: Date): string {
 
 export default function RecentEntries() {
     const router = useRouter();
+    const { entries } = useEntries();
+    console.log('RecentEntries - entries count:', entries.length, JSON.stringify(entries));
+
 
     return (
         <View style={styles.container}>
@@ -41,8 +34,9 @@ export default function RecentEntries() {
 
             <View style={styles.listCard}>
                 {entries.slice(0, 3).map((entry, index) => (
-                    <View
-                        key={entry.title}
+                    <TouchableOpacity
+                        key={entry.id}
+                        onPress={() => router.push(`/entry/${entry.id}`)}
                         style={[
                             styles.entry,
                             index !== Math.min(entries.length, 3) - 1 && styles.entryDivider,
@@ -53,7 +47,7 @@ export default function RecentEntries() {
                             <Text style={styles.entryTitle}>{entry.title}</Text>
                             <Text style={styles.entryDate}>{formatEntryDate(entry.date)}</Text>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                 ))}
             </View>
 
@@ -68,12 +62,10 @@ const styles = StyleSheet.create({
     container: {
         marginHorizontal: 10,
         marginTop: 10
-
     },
     headerRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        // alignItems: 'center',
         marginBottom: 14,
         marginHorizontal: 10
     },

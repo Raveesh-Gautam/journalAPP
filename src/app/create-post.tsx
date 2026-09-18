@@ -63,14 +63,18 @@ export default function CreatePost() {
         ]);
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!title.trim()) {
             Alert.alert('Title required', 'Please add a title before saving.');
             return;
         }
 
-        addEntry({ title, body, imageUri });
-        router.back(); // Home screen pe wapas
+        try {
+            await addEntry({ title, body, imageUri });
+            router.back(); // Home screen pe wapas
+        } catch (error) {
+            Alert.alert('Error', 'Entry save nahi hui, dobara try karo.');
+        }
     };
 
     return (

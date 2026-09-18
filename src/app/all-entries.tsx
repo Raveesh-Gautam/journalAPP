@@ -1,20 +1,7 @@
 import { StyleSheet, Text, View, FlatList, TouchableOpacity } from "react-native";
 import { ChevronLeft } from "lucide-react-native";
 import { useRouter } from "expo-router";
-
-interface Entry {
-    title: string;
-    date: Date;
-}
-
-const allEntries: Entry[] = [
-    { title: "Soccer game", date: new Date(2022, 1, 8, 20, 15) },
-    { title: "Planning vacation!", date: new Date(2022, 1, 8, 20, 15) },
-    { title: "Visiting family", date: new Date(2022, 1, 8, 20, 15) },
-    { title: "First day at work", date: new Date(2022, 1, 9, 12, 14) },
-    { title: "Grocery shopping", date: new Date(2022, 1, 10, 9, 30) },
-    { title: "Movie night", date: new Date(2022, 1, 11, 21, 0) },
-];
+import { useEntries } from "@/context/EntriesContext";
 
 function formatEntryDate(date: Date): string {
     const time = date.toLocaleTimeString('en-US', {
@@ -32,6 +19,7 @@ function formatEntryDate(date: Date): string {
 
 export default function AllEntriesScreen() {
     const router = useRouter();
+    const { entries } = useEntries();
 
     return (
         <View style={styles.container}>
@@ -46,14 +34,14 @@ export default function AllEntriesScreen() {
 
             {/* Scrollable list */}
             <FlatList
-                data={allEntries}
-                keyExtractor={(item, index) => item.title + index}
+                data={entries}
+                keyExtractor={(item) => item.id}
                 contentContainerStyle={styles.listContent}
                 renderItem={({ item, index }) => (
                     <View
                         style={[
                             styles.entry,
-                            index !== allEntries.length - 1 && styles.entryDivider,
+                            index !== entries.length - 1 && styles.entryDivider,
                         ]}
                     >
                         <View style={styles.entryBar} />

@@ -1,10 +1,39 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
+import { useEffect } from 'react';
+import * as Google from 'expo-auth-session/providers/google';
+import * as WebBrowser from 'expo-web-browser';
+import { GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
+import { auth } from '../../firebaseConfig';
+
+WebBrowser.maybeCompleteAuthSession();
 
 export default function Welcome() {
     const router = useRouter();
 
+    const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
+        clientId: '801921960391-rii3ms3qkkk77v50gspsmlbvgetrf2ni.apps.googleusercontent.com',
+    });
+
+    // useEffect(() => {
+    //     if (response?.type === 'success') {
+    //         const { id_token } = response.params;
+    //         const credential = GoogleAuthProvider.credential(id_token);
+
+    //         signInWithCredential(auth, credential)
+    //             .then((userCredential) => {
+    //                 console.log('Signed in as:', userCredential.user.email);
+    //                 router.replace('/(tabs)/home');
+    //             })
+    //             .catch((err) => {
+    //                 console.error('Sign-in error:', err);
+    //                 Alert.alert('Sign-in failed', err.message);
+    //             });
+    //     } else if (response?.type === 'error') {
+    //         Alert.alert('Sign-in failed', 'Google sign-in cancel ya error ho gaya.');
+    //     }
+    // }, [response]);
     const handleGetStarted = () => {
         router.replace('/(tabs)/home');
     };
@@ -22,8 +51,13 @@ export default function Welcome() {
                     </View>
                 </View>
                 <View style={styles.buttonWrapper}>
-                    <TouchableOpacity style={styles.button} onPress={handleGetStarted}>
-                        <Text style={styles.buttonText}>Join for free</Text>
+                    <TouchableOpacity
+                        style={styles.button}
+                        //onPress={() => promptAsync()}
+                        onPress={handleGetStarted}
+                        disabled={!request}
+                    >
+                        <Text style={styles.buttonText}>Continue with Google</Text>
                     </TouchableOpacity>
                 </View>
                 <Text style={styles.footerText}>Already have an account? <Text style={styles.login}>Log in</Text></Text>
