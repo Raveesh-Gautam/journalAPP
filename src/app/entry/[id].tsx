@@ -1,6 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ChevronLeft, MoreHorizontal, Share2 } from 'lucide-react-native';
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, Share, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import * as Sharing from 'expo-sharing';
 import { useEntries } from '@/context/EntriesContext';
 
 export default function EntryDetail() {
@@ -8,7 +9,6 @@ export default function EntryDetail() {
     const { id } = useLocalSearchParams<{ id: string }>();
     const { entries } = useEntries();
 
-    // Saari entries mein se wahi entry dhundo jiska id match ho
     const entry = entries.find((e) => e.id === id);
 
     if (!entry) {
@@ -23,6 +23,30 @@ export default function EntryDetail() {
         weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
     });
 
+    const handleShare = async () => {
+        try {
+            // Agar entry mein image hai, to image share karo (native share sheet, WhatsApp etc mein image ke saath jayega)
+            if (entry.imageUri) {
+                const isAvailable = await Sharing.isAvailableAsync();
+                if (!isAvailable) {
+                    Alert.alert('Error', 'Is device pe sharing available nahi hai.');
+                    return;
+                }
+                await Sharing.shareAsync(entry.imageUri, {
+                    dialogTitle: entry.title,
+                });
+            } else {
+                // Image nahi hai to sirf text share karo
+                await Share.share({
+                    title: entry.title,
+                    message: `${entry.title}\n\n${entry.body}\n\n${dateLabel}`,
+                });
+            }
+        } catch (error) {
+            Alert.alert('Error', 'Share nahi ho paya, dobara try karo.');
+        }
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -30,7 +54,7 @@ export default function EntryDetail() {
                     <ChevronLeft size={24} color="#000" />
                 </TouchableOpacity>
                 <View style={styles.headerRightIcons}>
-                    <TouchableOpacity style={{ marginRight: 16 }}>
+                    <TouchableOpacity style={{ marginRight: 16 }} onPress={handleShare}>
                         <Share2 size={20} color="#000" />
                     </TouchableOpacity>
                     <TouchableOpacity>

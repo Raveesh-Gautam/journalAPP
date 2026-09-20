@@ -1,0 +1,39 @@
+{
+    "project_info": {
+        "project_number": "801921960391",
+        "project_id": "ecom-4f83d",
+        "storage_bucket": "ecom-4f83d.firebasestorage.app"
+    },
+    "client": [
+        {
+            "client_info": {
+                "mobilesdk_app_id": "1:801921960391:android:03972191612e3b00eb31e2",
+                "android_client_info": {
+                    "package_name": "com.raveesh.journalapp"
+                }
+            },
+            "oauth_client": [
+                {
+                    "client_id": "801921960391-rii3ms3qkkk77v50gspsmlbvgetrf2ni.apps.googleusercontent.com",
+                    "client_type": 3
+                }
+            ],
+            "api_key": [
+                {
+                    "current_key": "AIzaSyBJDXPmnpRRCisUWECOvy7wt1RSZj1s9Ic"
+                }
+            ],
+            "services": {
+                "appinvite_service": {
+                    "other_platform_oauth_client": [
+                        {
+                            "client_id": "801921960391-rii3ms3qkkk77v50gspsmlbvgetrf2ni.apps.googleusercontent.com",
+                            "client_type": 3
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "configuration_version": "1"
+}

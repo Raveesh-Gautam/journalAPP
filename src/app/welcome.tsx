@@ -2,40 +2,37 @@ import { StyleSheet, Text, View, TouchableOpacity, Image, Alert } from 'react-na
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useEffect } from 'react';
-import * as Google from 'expo-auth-session/providers/google';
-import * as WebBrowser from 'expo-web-browser';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
 import { auth } from '../../firebaseConfig';
 
-WebBrowser.maybeCompleteAuthSession();
+// once an app load first time initialise
+GoogleSignin.configure({
+    webClientId: '801921960391-rii3ms3qkkk77v50gspsmlbvgetrf2ni.apps.googleusercontent.com',
+});
 
 export default function Welcome() {
     const router = useRouter();
 
-    const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
-        clientId: '801921960391-rii3ms3qkkk77v50gspsmlbvgetrf2ni.apps.googleusercontent.com',
-    });
+    const handleGoogleSignIn = async () => {
+        try {
+            await GoogleSignin.hasPlayServices();
+            const userInfo = await GoogleSignin.signIn();
 
-    // useEffect(() => {
-    //     if (response?.type === 'success') {
-    //         const { id_token } = response.params;
-    //         const credential = GoogleAuthProvider.credential(id_token);
+            const idToken = userInfo.data?.idToken;
+            if (!idToken) {
+                throw new Error('No ID token received from Google');
+            }
 
-    //         signInWithCredential(auth, credential)
-    //             .then((userCredential) => {
-    //                 console.log('Signed in as:', userCredential.user.email);
-    //                 router.replace('/(tabs)/home');
-    //             })
-    //             .catch((err) => {
-    //                 console.error('Sign-in error:', err);
-    //                 Alert.alert('Sign-in failed', err.message);
-    //             });
-    //     } else if (response?.type === 'error') {
-    //         Alert.alert('Sign-in failed', 'Google sign-in cancel ya error ho gaya.');
-    //     }
-    // }, [response]);
-    const handleGetStarted = () => {
-        router.replace('/(tabs)/home');
+            const credential = GoogleAuthProvider.credential(idToken);
+            const userCredential = await signInWithCredential(auth, credential);
+
+            console.log('Signed in as:', userCredential.user.email);
+            router.replace('/(tabs)/home');
+        } catch (error: any) {
+            console.error('Google sign-in error:', error);
+            Alert.alert('Sign-in failed', error.message || 'Kuch galat ho gaya, dobara try karo.');
+        }
     };
 
     return (
@@ -53,9 +50,7 @@ export default function Welcome() {
                 <View style={styles.buttonWrapper}>
                     <TouchableOpacity
                         style={styles.button}
-                        //onPress={() => promptAsync()}
-                        onPress={handleGetStarted}
-                        disabled={!request}
+                        onPress={handleGoogleSignIn}
                     >
                         <Text style={styles.buttonText}>Continue with Google</Text>
                     </TouchableOpacity>
@@ -140,3 +135,11 @@ const styles = StyleSheet.create({
         textDecorationLine: 'underline',
     }
 });
+
+// Configuration: Build Credentials 1Ck3aqNlfc (Default)
+// Keystore
+// Type                JKS
+// Key Alias           23615c50c62eaaa233a624f43fefd18d
+// MD5 Fingerprint     F3:F2:13:A4:CF:B3:8B:F5:C8:44:34:41:08:FB:0F:77
+// SHA1 Fingerprint    2A:8C:09:E9:E5:5F:F4:D6:FD:58:A7:7E:AF:BB:A5:8C:1A:E4:A0:DC
+// SHA256 Fingerprint  C6:18:42:8B:E7:5B:DD:2B:A5:41:F5:38:CB:D3:F4:0A:69:36:74:BB:87:C1:A9:D8:1C:55:B8:CC:29:47:5A:46

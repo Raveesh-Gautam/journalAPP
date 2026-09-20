@@ -6,11 +6,9 @@ export default function TodayEntryCard() {
     const router = useRouter();
     const { entries } = useEntries();
 
-    // entries already sabse naya pehle order mein hain (createdAt desc)
-    // isliye entries[0] hi sabse recent/latest entry hai
+
     const latestEntry = entries[0];
 
-    // Agar abhi tak koi entry hi nahi hai to ye card kuch bhi render nahi karega
     if (!latestEntry) return null;
 
     const time = latestEntry.date.toLocaleTimeString('en-US', {
